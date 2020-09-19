@@ -1,0 +1,39 @@
+name: Checking
+
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Checking
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        components: rustfmt, clippy
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo
+          /usr/local/cargo/registry
+          target
+        key: ${{ runner.OS }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-cargo-
+          ${{ runner.OS }}-
+      
+    - name: Check with cargo clippy
+      run: cargo clippy -- -D warnings
+    - name: Check format
+      run: cargo fmt --all -- --check
+    - name: Cargo check
+      run: cargo check
+    - name: Run tests
+      run: cargo test
