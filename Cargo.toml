@@ -1,0 +1,7 @@
+[package]
+name = "auth"
+version = "0.0.1"
+authors = ["Egor <egor@berezify.fr>"]
+edition = "2018"
+
+[dependencies]
