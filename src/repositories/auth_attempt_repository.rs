@@ -41,14 +41,15 @@ impl AuthorizationAttemptStore for PgConnection {
         Ok(application)
     }
 
-    async fn get_authorization_attempt(
+    async fn get_authorization_attempt_by_code(
         &mut self,
-        id: &uuid::Uuid,
+        code: &str,
     ) -> Result<AuthorizationAttempt, RepositoryError> {
-        let authorization_attempt = query_as("SELECT * FROM authorization_attempts WHERE id = $1")
-            .bind(id)
-            .fetch_one(self)
-            .await?;
+        let authorization_attempt =
+            query_as("SELECT * FROM authorization_attempts WHERE code = $1")
+                .bind(code)
+                .fetch_one(self)
+                .await?;
         Ok(authorization_attempt)
     }
 }

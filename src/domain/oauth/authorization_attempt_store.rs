@@ -1,5 +1,4 @@
 use async_trait::async_trait;
-use uuid::Uuid;
 
 use crate::domain::oauth::AuthorizationAttempt;
 use crate::errors::RepositoryError;
@@ -11,8 +10,8 @@ pub trait AuthorizationAttemptStore {
         authorization_attempt: &AuthorizationAttempt,
     ) -> Result<AuthorizationAttempt, RepositoryError>;
 
-    async fn get_authorization_attempt(
+    async fn get_authorization_attempt_by_code(
         &mut self,
-        id: &Uuid,
+        code: &str,
     ) -> Result<AuthorizationAttempt, RepositoryError>;
 }

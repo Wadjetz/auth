@@ -91,6 +91,8 @@ pub async fn signup_route(
 
     let url = authorization_response.redirect_uri(&application.redirect_uri)?;
 
+    dbg!(&url);
+
     Ok(HttpResponse::Found()
         .header(header::LOCATION, url.as_str())
         .finish())

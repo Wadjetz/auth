@@ -6,7 +6,7 @@ use actix_web::{
 use sqlx::PgPool;
 
 use crate::domain::application::ApplicationStore;
-use crate::domain::oauth::{AuthorizationRequest, AuthorizationResponse};
+use crate::domain::oauth::AuthorizationRequest;
 use crate::errors::ApiError;
 
 #[get("/authorize")]
@@ -30,12 +30,4 @@ pub async fn authorize_form_route(
     Ok(HttpResponse::Found()
         .header(header::LOCATION, url.as_str())
         .finish())
-}
-
-// TODO test route, remove it
-#[get("/callback")]
-pub async fn authorize_callback_route(
-    authorization_response: Query<AuthorizationResponse>,
-) -> Result<HttpResponse, ApiError> {
-    Ok(HttpResponse::Ok().body(format!("{:?}", authorization_response)))
 }

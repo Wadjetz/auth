@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use sqlx::postgres::PgQueryAs;
 use sqlx::{query_as, PgConnection};
+use uuid::Uuid;
 
 use crate::domain::user::{User, UserStore};
 use crate::errors::RepositoryError;
@@ -29,6 +30,14 @@ impl UserStore for PgConnection {
         .bind(user.updated_at)
         .fetch_one(self)
         .await?;
+        Ok(user)
+    }
+
+    async fn get_user_by_id(&mut self, id: &Uuid) -> Result<User, RepositoryError> {
+        let user = query_as("SELECT * FROM users WHERE id = $1")
+            .bind(id)
+            .fetch_one(self)
+            .await?;
         Ok(user)
     }
 

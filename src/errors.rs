@@ -25,6 +25,8 @@ pub enum ApiError {
     Template(#[from] tera::Error),
     #[error("bcrypt")]
     Bcrypt(#[from] bcrypt::BcryptError),
+    #[error("token")]
+    Token(#[from] jsonwebtoken::errors::Error),
 }
 
 impl ResponseError for ApiError {
@@ -47,6 +49,7 @@ impl ResponseError for ApiError {
             | Self::Repository(_)
             | Self::Template(_)
             | Self::Bcrypt(_)
+            | Self::Token(_)
             | Self::Url(_) => HttpResponse::build(http::StatusCode::INTERNAL_SERVER_ERROR)
                 .json(json!({ "message": "technical.error" })),
         }

@@ -10,6 +10,7 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 mod config;
 mod domain;
 mod errors;
+mod jwt;
 mod password;
 mod repositories;
 mod routes;
@@ -56,7 +57,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::signup::signup_form_route)
             .service(routes::signup::signup_route)
             .service(routes::authorize::authorize_form_route)
-            .service(routes::authorize::authorize_callback_route)
+            .service(routes::token::token_route)
     })
     .bind(&address)?
     .run()
