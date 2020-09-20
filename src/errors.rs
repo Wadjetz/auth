@@ -17,6 +17,14 @@ pub enum ApiError {
     IO(#[from] std::io::Error),
     #[error("sqlx")]
     Sqlx(#[from] sqlx::Error),
+    #[error("url")]
+    Url(#[from] url::ParseError),
+    #[error("repository")]
+    Repository(#[from] RepositoryError),
+    #[error("template")]
+    Template(#[from] tera::Error),
+    #[error("bcrypt")]
+    Bcrypt(#[from] bcrypt::BcryptError),
 }
 
 impl ResponseError for ApiError {
@@ -25,14 +33,42 @@ impl ResponseError for ApiError {
         match self {
             Self::Invalid { message } => HttpResponse::build(http::StatusCode::BAD_REQUEST)
                 .json(json!({ "message": message })),
-            Self::Duplicate => HttpResponse::build(http::StatusCode::BAD_REQUEST)
-                .json(json!({ "message": "already.exists" })),
-            Self::NotFound => HttpResponse::build(http::StatusCode::NOT_FOUND)
-                .json(json!({ "message": "not.found" })),
-            Self::InternalServer | Self::IO(_) | Self::Sqlx(_) => {
-                HttpResponse::build(http::StatusCode::INTERNAL_SERVER_ERROR)
-                    .json(json!({ "message": "technical.error" }))
+            Self::Duplicate | Self::Repository(RepositoryError::Duplicate) => {
+                HttpResponse::build(http::StatusCode::BAD_REQUEST)
+                    .json(json!({ "message": "already.exists" }))
             }
+            Self::NotFound | Self::Repository(RepositoryError::NotFound) => {
+                HttpResponse::build(http::StatusCode::NOT_FOUND)
+                    .json(json!({ "message": "not.found" }))
+            }
+            Self::InternalServer
+            | Self::IO(_)
+            | Self::Sqlx(_)
+            | Self::Repository(_)
+            | Self::Template(_)
+            | Self::Bcrypt(_)
+            | Self::Url(_) => HttpResponse::build(http::StatusCode::INTERNAL_SERVER_ERROR)
+                .json(json!({ "message": "technical.error" })),
+        }
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum RepositoryError {
+    #[error("already exist")]
+    Duplicate,
+    #[error("not found")]
+    NotFound,
+    #[error("database")]
+    Database(sqlx::Error),
+}
+
+impl From<sqlx::Error> for RepositoryError {
+    fn from(error: sqlx::Error) -> Self {
+        match &error {
+            sqlx::Error::RowNotFound => Self::NotFound,
+            sqlx::Error::Database(e) if e.code() == Some("23505") => Self::Duplicate,
+            _ => Self::Database(error),
         }
     }
 }
