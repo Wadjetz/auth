@@ -14,10 +14,11 @@ mod jwt;
 mod password;
 mod repositories;
 mod routes;
+mod templates;
 
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
-use tera::Tera;
+use log::info;
 
 use crate::config::Config;
 
@@ -27,6 +28,8 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     let config = Config::new().expect("Config Error");
     let address = config.address();
+
+    info!("Server at {}", &address);
 
     let database_url = config.database_url.clone();
     actix_web::web::block(move || {
@@ -43,11 +46,10 @@ async fn main() -> std::io::Result<()> {
         .expect("creating pool error");
 
     HttpServer::new(move || {
-        let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
         App::new()
             .data(sqlx_pool.clone())
             .data(config.clone())
-            .data(tera)
+            .data(templates::create_templates().expect("Templates errors"))
             .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.1.0"))
             .wrap(middleware::Compress::default())
             .wrap(middleware::Logger::default())

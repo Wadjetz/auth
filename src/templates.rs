@@ -1,0 +1,10 @@
+use tera::{Tera, Error};
+
+pub fn create_templates() -> Result<Tera, Error> {
+    let mut tera = Tera::default();
+    tera.add_raw_templates(vec![
+        ("login.html", include_str!("./templates/login.html")),
+        ("signup.html", include_str!("./templates/signup.html")),
+    ])?;
+    Ok(tera)
+}
