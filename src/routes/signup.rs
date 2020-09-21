@@ -30,11 +30,6 @@ pub async fn signup_form_route(
 
     let mut ctx = Context::new();
     ctx.insert("app_name", &application.name);
-    ctx.insert("client_id", &authorization_request.client_id);
-    ctx.insert("response_type", &authorization_request.response_type);
-    ctx.insert("redirect_uri", &authorization_request.redirect_uri);
-    ctx.insert("scope", &authorization_request.scope);
-    ctx.insert("state", &authorization_request.state);
 
     let querystring = authorization_request.to_querystring();
     ctx.insert("querystring", &querystring);
@@ -48,22 +43,18 @@ pub struct SignupRequest {
     pub email: String,
     pub username: String,
     pub password: String,
-    pub client_id: String,
-    pub response_type: String,
-    pub redirect_uri: String,
-    pub scope: Option<String>,
-    pub state: Option<String>,
 }
 
 #[post("/signup")]
 pub async fn signup_route(
     pool: Data<PgPool>,
     signup_request: Form<SignupRequest>,
+    authorization_request: Query<AuthorizationRequest>,
 ) -> Result<HttpResponse, ApiError> {
     let mut connection = pool.acquire().await?;
 
     let application = connection
-        .get_application(&signup_request.client_id)
+        .get_application(&authorization_request.client_id)
         .await?;
 
     let user = password::secure_user(
@@ -76,11 +67,11 @@ pub async fn signup_route(
 
     let authorization_attempt = AuthorizationAttempt::new(
         user.id,
-        signup_request.client_id.clone(),
-        signup_request.response_type.clone(),
-        signup_request.redirect_uri.clone(),
-        signup_request.scope.clone(),
-        signup_request.state.clone(),
+        authorization_request.client_id.clone(),
+        authorization_request.response_type.to_string().clone(),
+        authorization_request.redirect_uri.clone(),
+        authorization_request.scope.clone(),
+        authorization_request.state.clone(),
     );
 
     let authorization_attempt = connection
