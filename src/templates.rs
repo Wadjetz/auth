@@ -1,4 +1,4 @@
-use tera::{Tera, Error};
+use tera::{Error, Tera};
 
 pub fn create_templates() -> Result<Tera, Error> {
     let mut tera = Tera::default();
