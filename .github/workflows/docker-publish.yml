@@ -27,5 +27,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           path: ./infra/docker
-          image: wadjetz/bauth
+          repository: wadjetz/bauth
           tag_with_ref: true
