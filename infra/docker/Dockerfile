@@ -1,4 +1,4 @@
-FROM alpine:3.12.0
+FROM ubuntu:20.04
 
 COPY bauth /bauth/bauth
 COPY templates /bauth/templates

@@ -20,7 +20,7 @@ jobs:
       - name: Prepare docker
         run: |
           cp -r templates infra/docker/templates
-          cp target/release/bauth infra/docker
+          cp target/release/bauth infra/docker/bauth
 
       - name: Push server docker to Docker Hub
         uses: docker/build-push-action@v2
