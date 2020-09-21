@@ -1,5 +1,5 @@
 [package]
-name = "auth"
+name = "bauth"
 version = "0.0.1"
 authors = ["Egor <egor@berezify.fr>"]
 edition = "2018"
