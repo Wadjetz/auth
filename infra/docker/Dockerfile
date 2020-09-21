@@ -1,8 +1,10 @@
 FROM alpine:3.12.0
 
-COPY bauth /
-COPY templates /templates
+COPY bauth /bauth/bauth
+COPY templates /bauth/templates
 
 WORKDIR /
 
-CMD /bauth
+EXPOSE 5000
+
+CMD /bauth/bauth
