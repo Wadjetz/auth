@@ -2,6 +2,9 @@ use actix_web::{http, HttpResponse, ResponseError};
 use serde_json::json;
 use thiserror::Error;
 
+use crate::domain::oauth::OauthError;
+use crate::utils::redirect_response;
+
 #[allow(dead_code)]
 #[derive(Debug, Error)]
 pub enum ApiError {
@@ -27,6 +30,8 @@ pub enum ApiError {
     Bcrypt(#[from] bcrypt::BcryptError),
     #[error("token")]
     Token(#[from] jsonwebtoken::errors::Error),
+    #[error("token")]
+    Oauth(#[from] OauthError),
 }
 
 impl ResponseError for ApiError {
@@ -43,6 +48,7 @@ impl ResponseError for ApiError {
                 HttpResponse::build(http::StatusCode::NOT_FOUND)
                     .json(json!({ "message": "not.found" }))
             }
+            Self::Oauth(error) => redirect_response(&error.to_redirect_url()),
             Self::InternalServer
             | Self::IO(_)
             | Self::Sqlx(_)

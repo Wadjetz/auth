@@ -15,6 +15,7 @@ mod password;
 mod repositories;
 mod routes;
 mod templates;
+mod utils;
 
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;

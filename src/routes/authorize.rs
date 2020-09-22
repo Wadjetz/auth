@@ -1,13 +1,13 @@
 use actix_web::{
     get,
-    http::header,
     web::{Data, HttpResponse, Query},
 };
 use sqlx::PgPool;
 
 use crate::domain::application::ApplicationStore;
-use crate::domain::oauth::AuthorizationRequest;
-use crate::errors::ApiError;
+use crate::domain::oauth::{AuthorizationRequest, OauthError, OauthErrorKind};
+use crate::errors::{ApiError, RepositoryError};
+use crate::utils::redirect_response;
 
 #[get("/authorize")]
 pub async fn authorize_form_route(
@@ -18,7 +18,21 @@ pub async fn authorize_form_route(
 
     let application = connection
         .get_application(&authorization_request.client_id)
-        .await?;
+        .await
+        .map_err(|error| match error {
+            RepositoryError::NotFound => OauthError::new(
+                OauthErrorKind::UnauthorizedClient,
+                authorization_request.redirect_uri.to_string(),
+                Some(String::from("Client not found")),
+                None,
+            ),
+            error => OauthError::new(
+                OauthErrorKind::ServerError,
+                authorization_request.redirect_uri.to_string(),
+                Some(error.to_string()),
+                None,
+            ),
+        })?;
 
     dbg!(&application);
 
@@ -27,7 +41,5 @@ pub async fn authorize_form_route(
 
     dbg!(&url);
 
-    Ok(HttpResponse::Found()
-        .header(header::LOCATION, url.as_str())
-        .finish())
+    Ok(redirect_response(&url))
 }

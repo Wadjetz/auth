@@ -1,7 +1,5 @@
 use actix_web::{
-    get,
-    http::header,
-    post,
+    get, post,
     web::{Data, Form, HttpResponse, Query},
 };
 use serde::{Deserialize, Serialize};
@@ -15,6 +13,7 @@ use crate::domain::oauth::{
 use crate::domain::user::UserStore;
 use crate::errors::ApiError;
 use crate::password::verify_password;
+use crate::utils::redirect_response;
 
 #[get("/login")]
 pub async fn login_form_route(
@@ -62,8 +61,8 @@ pub async fn login_route(
         let authorization_attempt = AuthorizationAttempt::new(
             user.id,
             authorization_request.client_id.clone(),
-            authorization_request.response_type.to_string().clone(),
-            authorization_request.redirect_uri.clone(),
+            authorization_request.response_type.to_string(),
+            authorization_request.redirect_uri.to_string(),
             authorization_request.scope.clone(),
             authorization_request.state.clone(),
         );
@@ -78,9 +77,7 @@ pub async fn login_route(
 
         dbg!(&url);
 
-        Ok(HttpResponse::Found()
-            .header(header::LOCATION, url.as_str())
-            .finish())
+        Ok(redirect_response(&url))
     } else {
         // TODO better message error
         Ok(HttpResponse::Unauthorized().finish())

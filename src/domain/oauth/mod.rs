@@ -9,3 +9,6 @@ pub use authorization_attempt::*;
 
 mod authorization_attempt_store;
 pub use authorization_attempt_store::*;
+
+mod errors;
+pub use errors::*;
