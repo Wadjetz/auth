@@ -1,7 +1,8 @@
 FROM ubuntu:20.04
 
+RUN apt-get update && apt-get install -y ca-certificates openssl libssl-dev libpq-dev
+
 COPY bauth /bauth/bauth
-COPY templates /bauth/templates
 
 WORKDIR /
 
