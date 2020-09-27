@@ -4,6 +4,7 @@ use actix_web::{
 };
 use sqlx::PgPool;
 
+use crate::config::Config;
 use crate::domain::application::ApplicationStore;
 use crate::domain::oauth::{AuthorizationRequest, OauthError, OauthErrorKind};
 use crate::errors::{ApiError, RepositoryError};
@@ -12,6 +13,7 @@ use crate::utils::redirect_response;
 #[get("/authorize")]
 pub async fn authorize_form_route(
     pool: Data<PgPool>,
+    config: Data<Config>,
     authorization_request: Query<AuthorizationRequest>,
 ) -> Result<HttpResponse, ApiError> {
     let mut connection = pool.acquire().await?;
@@ -37,7 +39,7 @@ pub async fn authorize_form_route(
     dbg!(&application);
 
     let querystring = &authorization_request.to_querystring();
-    let url = format!("/login?{}", querystring);
+    let url = format!("{}/login?{}", config.base_uri, querystring);
 
     dbg!(&url);
 

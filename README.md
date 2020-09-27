@@ -12,6 +12,9 @@ services:
         container_name: bauth_server
         environment:
             DATABASE_URL: postgres://bauth:bauth@bauth_database/bauth
+            BASE_URI: https://auth-server.com
+        ports:
+            - 80:5000
         depends_on:
             - bauth_database
 
