@@ -49,4 +49,11 @@ impl ApplicationStore for PgConnection {
             .await?;
         Ok(application)
     }
+
+    async fn get_applications(&mut self) -> Result<Vec<Application>, RepositoryError> {
+        let applications = query_as("SELECT * FROM applications")
+            .fetch_all(self)
+            .await?;
+        Ok(applications)
+    }
 }

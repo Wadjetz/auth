@@ -11,4 +11,6 @@ pub trait ApplicationStore {
     ) -> Result<Application, RepositoryError>;
 
     async fn get_application(&mut self, client_id: &str) -> Result<Application, RepositoryError>;
+
+    async fn get_applications(&mut self) -> Result<Vec<Application>, RepositoryError>;
 }

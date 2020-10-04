@@ -1,5 +1,5 @@
 use actix_web::{
-    post,
+    get, post,
     web::{Data, HttpResponse, Json},
 };
 use sqlx::PgPool;
@@ -7,7 +7,14 @@ use sqlx::PgPool;
 use crate::domain::application::{Application, ApplicationStore, CreateApplication};
 use crate::errors::ApiError;
 
-#[post("/api/application")]
+#[get("/api/applications")]
+pub async fn get_applications_route(pool: Data<PgPool>) -> Result<HttpResponse, ApiError> {
+    let mut connection = pool.acquire().await?;
+    let applications = connection.get_applications().await?;
+    Ok(HttpResponse::Ok().json(applications))
+}
+
+#[post("/api/applications")]
 pub async fn create_application_route(
     pool: Data<PgPool>,
     payload: Json<CreateApplication>,

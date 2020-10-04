@@ -23,6 +23,6 @@ impl AuthorizationResponse {
         if let Some(s) = self.state.as_ref() {
             url.query_pairs_mut().append_pair("state", s);
         }
-        Ok(url.to_string())
+        Ok(format!("{}?{}", redirect_uri, url.query().unwrap_or("")))
     }
 }
