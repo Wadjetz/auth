@@ -2,17 +2,13 @@
 extern crate diesel;
 #[macro_use]
 extern crate diesel_migrations;
-embed_migrations!("./migrations");
+embed_migrations!("../migrations");
 
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 mod config;
-mod domain;
 mod errors;
-mod jwt;
-mod password;
-mod repositories;
 mod routes;
 mod templates;
 mod utils;

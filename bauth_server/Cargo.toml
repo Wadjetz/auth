@@ -1,0 +1,46 @@
+[package]
+name = "bauth_server"
+version = "0.1.0"
+authors = ["Egor <egor@berezify.fr>"]
+edition = "2018"
+
+[dependencies]
+bauth = { path = "../bauth" }
+# Data types
+chrono = {version = "0.4.19",features = ["serde"]}
+uuid = {version = "0.8.1",features = ["serde","v4"]}
+futures = "0.3.5"
+url = {version = "2.1.1", features = ["serde"]}
+
+# Serialisation
+serde = {version = "1.0.116",features = ["derive"]}
+serde_json = "1.0.58"
+
+# Tools
+thiserror = "1.0.20"
+async-trait = "0.1.41"
+jemallocator = "0.3.2"
+validator = { version = "0.11.0", features = ["derive"] }
+rand = "0.7.3"
+itertools = "0.9.0"
+strum = { version = "0.19.2", features = ["derive"] }
+strum_macros = "0.19.2"
+
+# Web
+actix-web = "3.1.0"
+tera = "1.5.0"
+
+# Database
+sqlx = { version = "0.3.5", default-features = false, features = ["runtime-tokio", "postgres", "macros", "uuid", "chrono", "json"] }
+diesel = {version = "1.4.5",features = ["postgres"]}
+diesel_migrations = "1.4.0"
+
+# Crypto
+bcrypt = "0.8.2"
+jsonwebtoken = "7.2.0"
+
+# Environement
+dotenv = "0.15.0"
+envy = "0.4.1"
+log = "0.4.11"
+env_logger = "0.7.1"

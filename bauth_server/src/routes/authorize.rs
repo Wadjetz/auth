@@ -2,12 +2,13 @@ use actix_web::{
     get,
     web::{Data, HttpResponse, Query},
 };
+use bauth::domain::application::ApplicationStore;
+use bauth::domain::oauth::{AuthorizationRequest, OauthError, OauthErrorKind};
+use bauth::errors::RepositoryError;
 use sqlx::PgPool;
 
 use crate::config::Config;
-use crate::domain::application::ApplicationStore;
-use crate::domain::oauth::{AuthorizationRequest, OauthError, OauthErrorKind};
-use crate::errors::{ApiError, RepositoryError};
+use crate::errors::ApiError;
 use crate::utils::redirect_response;
 
 #[get("/authorize")]

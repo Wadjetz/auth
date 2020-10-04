@@ -2,8 +2,7 @@ use async_trait::async_trait;
 use sqlx::postgres::PgQueryAs;
 use sqlx::{query_as, PgConnection};
 
-use crate::domain::application::Application;
-use crate::domain::application::ApplicationStore;
+use crate::domain::application::{Application, ApplicationStore};
 use crate::errors::RepositoryError;
 
 #[async_trait]

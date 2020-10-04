@@ -4,8 +4,8 @@ use actix_web::{
 };
 use sqlx::PgPool;
 
-use crate::domain::application::{Application, ApplicationStore, CreateApplication};
 use crate::errors::ApiError;
+use bauth::domain::application::{Application, ApplicationStore, CreateApplication};
 
 #[get("/api/applications")]
 pub async fn get_applications_route(pool: Data<PgPool>) -> Result<HttpResponse, ApiError> {

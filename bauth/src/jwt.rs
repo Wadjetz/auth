@@ -1,11 +1,12 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{
+    decode, encode, errors::Error, Algorithm, DecodingKey, EncodingKey, Header, Validation,
+};
 use serde::{Deserialize, Serialize};
 use std::ops::Add;
 use uuid::Uuid;
 
 use crate::domain::user::User;
-use crate::errors::ApiError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claime {
@@ -20,7 +21,7 @@ impl Claime {
     }
 }
 
-pub fn create_token(user: User, client_secret: &str) -> Result<(String, Claime), ApiError> {
+pub fn create_token(user: User, client_secret: &str) -> Result<(String, Claime), Error> {
     let claims = Claime::new(
         user.id,
         Utc::now().add(Duration::days(30)).timestamp() as usize,
@@ -35,7 +36,7 @@ pub fn create_token(user: User, client_secret: &str) -> Result<(String, Claime),
 }
 
 #[allow(dead_code)]
-pub fn decode_token(token: &str, client_secret: &str) -> Result<Claime, ApiError> {
+pub fn decode_token(token: &str, client_secret: &str) -> Result<Claime, Error> {
     let validation = Validation {
         validate_exp: true,
         algorithms: vec![Algorithm::HS512],

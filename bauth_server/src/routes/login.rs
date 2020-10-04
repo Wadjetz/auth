@@ -6,13 +6,14 @@ use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use tera::{Context, Tera};
 
-use crate::domain::application::ApplicationStore;
-use crate::domain::oauth::{
+use bauth::domain::application::ApplicationStore;
+use bauth::domain::oauth::{
     AuthorizationAttempt, AuthorizationAttemptStore, AuthorizationRequest, AuthorizationResponse,
 };
-use crate::domain::user::UserStore;
+use bauth::domain::user::UserStore;
+use bauth::password::verify_password;
+
 use crate::errors::ApiError;
-use crate::password::verify_password;
 use crate::utils::redirect_response;
 
 #[get("/login")]

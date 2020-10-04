@@ -2,14 +2,14 @@ use actix_web::{
     post,
     web::{Data, HttpResponse, Query},
 };
+use bauth::domain::application::ApplicationStore;
+use bauth::domain::oauth::AuthorizationAttemptStore;
+use bauth::domain::user::UserStore;
+use bauth::jwt;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 
-use crate::domain::application::ApplicationStore;
-use crate::domain::oauth::AuthorizationAttemptStore;
-use crate::domain::user::UserStore;
 use crate::errors::ApiError;
-use crate::jwt;
 
 ///POST https://api.authorization-server.com/token
 /// grant_type=authorization_code&
