@@ -1,10 +1,10 @@
 use actix_web::{http, HttpResponse, ResponseError};
+use bauth::domain::oauth::OauthError;
+use bauth::errors::RepositoryError;
 use serde_json::json;
 use thiserror::Error;
 
 use crate::utils::redirect_response;
-use bauth::domain::oauth::OauthError;
-use bauth::errors::RepositoryError;
 
 #[allow(dead_code)]
 #[derive(Debug, Error)]
