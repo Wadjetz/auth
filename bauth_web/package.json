@@ -1,5 +1,5 @@
 {
-  "name": "bauth-web",
+  "name": "bauth_web",
   "version": "0.1.0",
   "scripts": {
     "build": "rollup -c",

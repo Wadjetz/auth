@@ -26,7 +26,7 @@ impl Config {
     pub fn assets(&self) -> String {
         match &self.assets {
             Some(assets) => assets.clone(),
-            None => "./bauth-web/public/".to_string(),
+            None => "./bauth_web/public/".to_string(),
         }
     }
 
