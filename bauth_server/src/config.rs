@@ -7,6 +7,7 @@ pub struct Config {
     pub database_url: String,
     pub host: Option<String>,
     pub port: Option<usize>,
+    pub admin_app_name: Option<String>,
 }
 
 impl Config {
@@ -19,5 +20,11 @@ impl Config {
         let host = self.host.as_ref().unwrap_or(&default_host);
         let port = self.port.unwrap_or(5000);
         format!("{}:{}", host, port)
+    }
+
+    pub fn admin_app_name(&self) -> String {
+        self.admin_app_name
+            .clone()
+            .unwrap_or("Bauth Admin Web Client".to_string())
     }
 }

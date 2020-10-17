@@ -55,4 +55,15 @@ impl ApplicationStore for PgConnection {
             .await?;
         Ok(applications)
     }
+
+    async fn get_application_by_name(
+        &mut self,
+        name: &str,
+    ) -> Result<Option<Application>, RepositoryError> {
+        let application = query_as("SELECT * FROM applications WHERE name = $1")
+            .bind(name)
+            .fetch_optional(self)
+            .await?;
+        Ok(application)
+    }
 }

@@ -14,6 +14,6 @@ services:
     adminer:
         image: adminer
         ports:
-            - 6666:8080
+            - 8080:8080
         depends_on:
             - database

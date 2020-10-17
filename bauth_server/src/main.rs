@@ -7,6 +7,7 @@ embed_migrations!("../migrations");
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
+mod admin;
 mod config;
 mod errors;
 mod routes;
@@ -16,6 +17,7 @@ mod utils;
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
 use log::info;
+use std::sync::Arc;
 
 use crate::config::Config;
 
@@ -42,10 +44,16 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("creating pool error");
 
+    let admin_app = admin::admin_init::init_admin_application(sqlx_pool.clone(), &config)
+        .await
+        .expect("creating admin application error");
+    let admin_app = Arc::new(admin_app);
+
     HttpServer::new(move || {
         App::new()
             .data(sqlx_pool.clone())
             .data(config.clone())
+            .data(admin_app.clone())
             .data(templates::create_templates().expect("Templates errors"))
             .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.1.0"))
             .wrap(middleware::Compress::default())

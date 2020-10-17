@@ -3,10 +3,8 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
 
-use rand::distributions::Alphanumeric;
-use rand::{thread_rng, Rng};
-
 use crate::domain::application::CreateApplication;
+use crate::domain::security::generate_random_string;
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct Application {
@@ -23,8 +21,8 @@ pub struct Application {
 
 impl Application {
     pub fn from(create_application: CreateApplication) -> Self {
-        let client_id: String = thread_rng().sample_iter(Alphanumeric).take(30).collect();
-        let client_secret: String = thread_rng().sample_iter(Alphanumeric).take(50).collect();
+        let client_id: String = generate_random_string(30);
+        let client_secret: String = generate_random_string(50);
         Self {
             id: Uuid::new_v4(),
             client_id,
