@@ -4,7 +4,7 @@ use sqlx::FromRow;
 use uuid::Uuid;
 
 use crate::domain::application::CreateApplication;
-use crate::domain::security::generate_random_string;
+use crate::security::generate_random_string;
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct Application {
