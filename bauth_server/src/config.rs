@@ -25,6 +25,6 @@ impl Config {
     pub fn admin_app_name(&self) -> String {
         self.admin_app_name
             .clone()
-            .unwrap_or("Bauth Admin Web Client".to_string())
+            .unwrap_or_else(|| "Bauth Admin Web Client".to_string())
     }
 }
