@@ -1,8 +1,7 @@
 <script lang="typescript">
-  import { oauthClient } from "../auth"
 </script>
 
-<main class="main"><a href="{oauthClient.authorizeUri()}">Login</a></main>
+<main class="main">Auth</main>
 
 <style>
   .main {

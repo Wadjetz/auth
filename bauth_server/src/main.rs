@@ -14,6 +14,7 @@ mod routes;
 mod templates;
 mod utils;
 
+use actix_files::Files;
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
 use log::info;
@@ -27,6 +28,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     let config = Config::new().expect("Config Error");
     let address = config.address();
+    let assets = config.assets();
 
     info!("Server at {}", &address);
 
@@ -58,6 +60,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.1.0"))
             .wrap(middleware::Compress::default())
             .wrap(middleware::Logger::default())
+            .service(routes::admin_routes::admin_route)
             .service(routes::application_routes::create_application_route)
             .service(routes::application_routes::get_applications_route)
             .service(routes::login::login_form_route)
@@ -66,6 +69,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::signup::signup_route)
             .service(routes::authorize::authorize_form_route)
             .service(routes::token::token_route)
+            .service(Files::new("/", &assets))
     })
     .bind(&address)?
     .run()

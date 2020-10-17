@@ -4,6 +4,7 @@ use serde::Deserialize;
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub base_uri: String,
+    pub assets: Option<String>,
     pub database_url: String,
     pub host: Option<String>,
     pub port: Option<usize>,
@@ -18,8 +19,15 @@ impl Config {
     pub fn address(&self) -> String {
         let default_host = "0.0.0.0".to_owned();
         let host = self.host.as_ref().unwrap_or(&default_host);
-        let port = self.port.unwrap_or(5000);
+        let port = self.port.unwrap_or(4100);
         format!("{}:{}", host, port)
+    }
+
+    pub fn assets(&self) -> String {
+        match &self.assets {
+            Some(assets) => assets.clone(),
+            None => "./bauth-web/public/".to_string(),
+        }
     }
 
     pub fn admin_app_name(&self) -> String {

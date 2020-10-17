@@ -10,7 +10,8 @@
     "format-check": "prettier --check \"src/**/{*.ts,*.svelte}\""
   },
   "dependencies": {
-    "@bjornlu/svelte-router": "^0.3.2"
+    "@bjornlu/svelte-router": "^0.3.2",
+    "query-string": "^6.13.6"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.1.0",

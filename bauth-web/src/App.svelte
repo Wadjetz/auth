@@ -1,10 +1,12 @@
 <script lang="typescript">
-  import { RouterView, initHashRouter } from "@bjornlu/svelte-router"
+  import { RouterView, initPathRouter } from "@bjornlu/svelte-router"
 
   import Home from "./screens/Home.svelte"
+  import Auth from "./screens/Auth.svelte"
 
-  initHashRouter([
-    { path: "/", component: Home },
+  initPathRouter([
+    { path: "/admin", component: Home },
+    { path: "/admin/oauth/callback", component: Auth }
   ])
 </script>
 
